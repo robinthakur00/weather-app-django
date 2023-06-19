@@ -1,27 +1,32 @@
-# Use the official Python image as the base image
-FROM python:3.9
+# syntax=docker/dockerfile:1
 
-# Set environment variables
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ARG PYTHON_VERSION=3.10.2
+FROM python:${PYTHON_VERSION}-slim as base
 
-# Set the working directory in the container
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Copy the requirements file
-COPY requirements.txt /code/
+ENV PYTHONUNBUFFERED=1
 
-# Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
-# Upgrade pip
-RUN pip install --no-cache-dir --upgrade pip
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    appuser
 
-# Copy the Django project code to the container
-COPY . /code/
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
 
-# Expose the port that the Django app will run on
+USER appuser
+
+COPY . .
+
 EXPOSE 8000
 
-# Run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD gunicorn 'weather_app.wsgi' --bind=0.0.0.0:8000
