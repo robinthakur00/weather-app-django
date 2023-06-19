@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <title>Weather App</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <!-- Include Weather Icons CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+    <style>
+        /* Add custom styles here */
+        .weather-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .temperature {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #ff5722;
+            /* Custom temperature color */
+        }
+
+        .weather-condition {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .weather-details {
+            font-size: 18px;
+            color: #3f51b5;
+            /* Custom details color */
+        }
+
+        /* Custom background color */
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Custom card style */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5">Weather Information</h1>
+
+        <form method="GET" action="" class="mt-4">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="input-group mb-3">
+                        <input type="text" name="city" class="form-control" placeholder="Enter city name">
+                        <button type="submit" class="btn btn-primary">Get Weather</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% if weather_data %}
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <i class="wi wi-{{ weather_data.condition }} weather-icon" style="color: #03a9f4;"></i>
+                <h2 class="temperature">{{ weather_data.temp_c }}°C</h2>
+                <h4 class="weather-condition">{{ weather_data.condition }}</h4>
+                <div class="weather-details">
+                    <p>
+                        <i class="wi wi-strong-wind"></i> Wind: {{ weather_data.wind_kph }} kph
+                    </p>
+                    <p>
+                        <i class="wi wi-humidity"></i> Humidity: {{ weather_data.humidity }}%
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Include Bootstrap JS at the end of the body -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
